@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-
+const connection = require('./db/connection');
 const app = express();
 
 //Config Json Response
