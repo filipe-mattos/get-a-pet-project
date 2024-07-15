@@ -17,5 +17,7 @@ app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 app.use(express.static('public'));
 
 //Routes
+const UserRoutes = require('./routes/User.routes')
+app.use('/users', UserRoutes);
 
 connection.sync().then(() => app.listen(5000)).catch(err => console.log(err));
