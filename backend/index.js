@@ -3,6 +3,10 @@ const cors = require('cors');
 const connection = require('./db/connection');
 const app = express();
 
+const User = require('./models/User');
+const Pet = require('./models/Pet');
+
+
 //Config Json Response
 app.use(express.json());
 
@@ -14,4 +18,4 @@ app.use(express.static('public'));
 
 //Routes
 
-app.listen(5000);
+connection.sync().then(() => app.listen(5000)).catch(err => console.log(err));
