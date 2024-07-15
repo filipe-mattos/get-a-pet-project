@@ -1,0 +1,11 @@
+version: '2'
+services:
+  estudos-node-postgresql:
+    image: postgres:11.5
+    # volumes:
+    #     - ~/volumes/jhipster/srsservice/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - "5432:5432"

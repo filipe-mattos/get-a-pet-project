@@ -1,0 +1,7 @@
+version: '2'
+services:
+  estudos-node-postgresql:
+    extends:
+      file: postgresql.yml
+      service: estudos-node-postgresql
+    container_name: estudos-node-postgresql
