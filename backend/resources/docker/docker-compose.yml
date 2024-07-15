@@ -1,7 +1,0 @@
-version: '2'
-services:
-  get-a-pet:
-    extends:
-      file: postgresql.yml
-      service: get-a-pet-postgresql
-    container_name: get-a-pet
