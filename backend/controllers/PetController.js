@@ -75,5 +75,22 @@ module.exports = class PetController {
     }
   }
 
+  static async getPetById(req, res){
+    const id = req.params.id
+    if(!id){
+      return res.status(500).json({message: "Id Invalido"})
+    }
+    try{
+      const pet = await Pet.findOne({where: {id: id}})
+      if(!pet){
+        return res.status(404).json({message: "Não foi possivel localizar um pet com esse id"})
+      }
+      res.status(200).json({pet})
+    }catch{
+      res.status(500).json({message: "Id Invalido"})
+    }
+
+  }
+
 
 }

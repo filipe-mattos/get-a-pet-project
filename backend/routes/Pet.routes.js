@@ -9,4 +9,5 @@ router.post('/create', verifyToken, imageUploader.array('images'), petController
 router.get('/getAll', petController.getAll);
 router.get('/myPets', verifyToken, petController.getAllUserPets);
 router.get('/myAdoptions', verifyToken, petController.getAllUserAdoptions);
+router.get('/:id', petController.getPetById);
 module.exports = router;
