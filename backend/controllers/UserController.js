@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require("bcrypt");
+const createUserToken = require("../helpers/create-user-token");
 
 module.exports = class UserController {
   static async create(req, res) {
@@ -26,8 +27,11 @@ module.exports = class UserController {
     //Create User
     const user = new User({name, email, phone, password: passwordHash})
 
-    const newUser = await user.save()
-      .then((result) => res.status(201).json({message: 'Usuário Cadastrado', data: result}))
-      .catch(err => console.log(err));
+    try {
+      const newUser = await user.save();
+      await createUserToken(newUser, req, res)
+    }catch(err) {
+      res.status(500).json({message: err})
+    };
   }
 }
