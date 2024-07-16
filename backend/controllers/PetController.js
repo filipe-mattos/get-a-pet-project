@@ -48,6 +48,20 @@ module.exports = class PetController {
     try {
       const pets = await Pet.findAll({order: [['createdAt', 'DESC']]});
       res.status(200).json({pets})
-    }catch (err){}
+    }catch (err){
+      res.status(500).json({message: err});
+    }
+  }
+
+  static async getAllUserPets(req, res){
+
+    const user = await getUserByToken(getToken(req), req);
+    console.log(user);
+    try {
+      const pets = await Pet.findAll({where: {UserId: user.id},order: [['createdAt', 'DESC']]});
+      res.status(200).json({pets})
+    }catch (err){
+      res.status(500).json({message: err});
+    }
   }
 }
