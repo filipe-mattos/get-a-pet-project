@@ -77,9 +77,6 @@ module.exports = class PetController {
 
   static async getPetById(req, res){
     const id = req.params.id
-    if(!id){
-      return res.status(500).json({message: "Id Invalido"})
-    }
     try{
       const pet = await Pet.findOne({where: {id: id}})
       if(!pet){
@@ -92,5 +89,21 @@ module.exports = class PetController {
 
   }
 
+  static async deletePetById(req, res){
+    const id = req.params.id;
+    const pet = await Pet.findOne({where: {id: id}})
+    if(!pet){
+      return res.status(404).json({message: "Não foi possivel localizar um pet com esse id"})
+    }
 
+    //Check if logged in user registered the pet
+    const user = await getUserByToken(getToken(req), req)
+    if(pet.UserId !== user.id){
+      return res.status(422).json({message: "Ocorreu um erro ao processar a sua solicitação, Tente Novamente mais tarde!"})
+    }
+
+    await Pet.destroy({where: {id: id}})
+      .then(() => res.status(200).json({message: "Pet Deletado Com Sucesso!"}))
+      .catch((err) => res.status(500).json({message: err}));
+  }
 }
