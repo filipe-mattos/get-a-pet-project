@@ -56,7 +56,6 @@ module.exports = class PetController {
   static async getAllUserPets(req, res){
 
     const user = await getUserByToken(getToken(req), req);
-    console.log(user);
     try {
       const pets = await Pet.findAll({where: {UserId: user.id},order: [['createdAt', 'DESC']]});
       res.status(200).json({pets})
@@ -64,4 +63,17 @@ module.exports = class PetController {
       res.status(500).json({message: err});
     }
   }
+
+  static async getAllUserAdoptions(req, res){
+
+    const user = await getUserByToken(getToken(req), req);
+    try {
+      const pets = await Pet.findAll({where: {adopter_id: user.id},order: [['createdAt', 'DESC']]});
+      res.status(200).json({pets})
+    }catch (err){
+      res.status(500).json({message: err});
+    }
+  }
+
+
 }
