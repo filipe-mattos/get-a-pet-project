@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require("bcrypt");
 const createUserToken = require("../helpers/create-user-token");
 const getToken = require("../helpers/get-token");
+const checkToken = require("../helpers/verify-token");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 module.exports = class UserController {
@@ -84,5 +85,9 @@ module.exports = class UserController {
     }
     user.password = undefined;
     res.status(200).json({user});
+  }
+
+  static async editUser(req, res){
+    res.status(200).json({message: 'Deu certo'})
   }
 }
