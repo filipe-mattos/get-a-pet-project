@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const createUserToken = require("../helpers/create-user-token");
 const getToken = require("../helpers/get-token");
 const checkToken = require("../helpers/verify-token");
+const getUserByToken = require("../helpers/get-user-by-token");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 module.exports = class UserController {
@@ -88,6 +89,39 @@ module.exports = class UserController {
   }
 
   static async editUser(req, res){
-    res.status(200).json({message: 'Deu certo'})
+    const id = req.params.id;
+    const user = await getUserByToken(getToken(req), req)
+    const {name, email, phone, password, confirmPassword} = req.body;
+    if(req.file){
+      user.image = req.file.filename;
+    }
+    // validation
+    if(!name || !email || !phone) {
+      return res.status(422).json({message: 'Campos obrigatorios nao preenchidos'});
+    }
+    //Check password
+    if(password !== confirmPassword) {
+      return res.status(422).json({message: 'A senha e a confirmação de senha precisam ser iguais!'});
+    }else if(password === confirmPassword && password){
+      //Create Password
+      const salt = await bcrypt.genSalt(12);
+      user.password = await bcrypt.hash(password, salt);
+    }
+    //Check if email has already taken
+    const userExist = await User.findOne({raw: true, where: {email: email}});
+    if(user.email !== email && userExist) {
+      return res.status(422).json({message: 'Email ja cadastrado - Por favor digite um novo email'});
+    }
+    user.name = name;
+    user.email = email;
+    user.phone = phone;
+
+    try {
+      await User.update(user, {where: {id: id}});
+      res.status(202).json({message: 'Usuario Atualizado com sucesso'});
+    }catch (err){
+      res.status(500).json({message: err})
+    }
+
   }
 }
