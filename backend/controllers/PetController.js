@@ -42,4 +42,12 @@ module.exports = class PetController {
       res.status(500).json({message: err});
     }
   }
+
+  static async getAll(req, res){
+
+    try {
+      const pets = await Pet.findAll({order: [['createdAt', 'DESC']]});
+      res.status(200).json({pets})
+    }catch (err){}
+  }
 }
