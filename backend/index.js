@@ -18,6 +18,8 @@ app.use(express.static('public'));
 
 //Routes
 const UserRoutes = require('./routes/User.routes')
+const PetRoutes = require('./routes/Pet.routes')
 app.use('/users', UserRoutes);
+app.use('/pets', PetRoutes)
 
 connection.sync().then(() => app.listen(5000)).catch(err => console.log(err));
