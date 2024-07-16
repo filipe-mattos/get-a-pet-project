@@ -3,7 +3,7 @@ const petController = require("../controllers/petController");
 
 //Middlewares
 const verifyToken = require("../helpers/verify-token");
-
-router.post('/create', verifyToken, petController.create);
+const {imageUploader} = require("../helpers/image-uploader");
+router.post('/create', verifyToken, imageUploader.array('images'), petController.create);
 
 module.exports = router;
