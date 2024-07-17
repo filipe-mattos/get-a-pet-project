@@ -106,4 +106,45 @@ module.exports = class PetController {
       .then(() => res.status(200).json({message: "Pet Deletado Com Sucesso!"}))
       .catch((err) => res.status(500).json({message: err}));
   }
+
+  static async editPet(req, res){
+    const id = req.params.id;
+    const {name, age, weight, color, available} = req.body;
+    console.log(req.body)
+    const images = req.files;
+
+    let updatedData = {}
+
+    //Check if pet exist
+    const pet = await Pet.findOne({where: {id: id}})
+    if(!pet){
+      return res.status(404).json({message: "Não foi possivel localizar um pet com esse id"})
+    }
+
+    //Check if logged in user registered the pet
+    const user = await getUserByToken(getToken(req), req)
+    if(pet.UserId !== user.id){
+      return res.status(422).json({message: "Ocorreu um erro ao processar a sua solicitação, Tente Novamente mais tarde!"})
+    }
+    console.log(name, age, weight, color, available)
+    //validations
+    if (!name || !age || !weight || !color || !images) {
+      return res.status(422).json({message: 'Campos obrigatorios nao preenchidos'});
+    }
+    updatedData = {name, age, weight, color, available};
+
+    if(images.length === 0) {
+      return res.status(422).json({message: 'A imagem do pet é obrigatoria'});
+    }else{
+      updatedData.images = [];
+      images.map((image) => {
+        updatedData.images.push(image.filename);
+      })
+    }
+
+    await Pet.update(updatedData, {where: {id: id}})
+      .then(() => res.status(200).json({message: "Pet Alterado com Sucesso"}))
+      .catch(err => res.status(500).json({message: err}));
+
+  }
 }
