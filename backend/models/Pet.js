@@ -26,6 +26,9 @@ const Pet = db.define('Pet', {
   available: {
     type: DataTypes.BOOLEAN,
   },
+  adopter_id: {
+    type: DataTypes.INTEGER,
+  }
 })
 
 User.hasMany(Pet)
